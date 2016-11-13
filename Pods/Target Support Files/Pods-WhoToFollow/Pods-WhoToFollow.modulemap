@@ -1,0 +1,6 @@
+framework module Pods_WhoToFollow {
+  umbrella header "Pods-WhoToFollow-umbrella.h"
+
+  export *
+  module * { export * }
+}
