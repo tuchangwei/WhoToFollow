@@ -30,12 +30,15 @@ struct HomeViewModel {
         //as same as: requestStream = requestOnRefreshStream.startWith("https://api.github.com/users")
         let requestStream = Observable.of(startupRequestStream, requestOnRefreshStream).merge()
         let responseStream = requestStream
-            .do(onNext: { (_) in
-                UIApplication.shared.isNetworkActivityIndicatorVisible = true
-            })
+//            .do(onNext: { (_) in
+//                UIApplication.shared.isNetworkActivityIndicatorVisible = true
+//            })
             .flatMap({ urlStr -> Observable<[User]> in
             let url = URL(string: urlStr)!
             return URLSession.shared.rx.json(url: url)
+                .do(onSubscribe: {
+                    UIApplication.shared.isNetworkActivityIndicatorVisible = true
+                })
                 .observeOn(SerialDispatchQueueScheduler(qos: .background))
                 .map({ json in
                     guard let json = json as? [AnyObject] else {
